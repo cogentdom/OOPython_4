@@ -1,21 +1,34 @@
 import os
 import sys
 
+class ConfigKeyError(Exception):
+    def __init__(self, this, key):
+        self.key = key
+        self.keys = this.keys()
+
+    def __str__(self):
+        # "jgjg"
+        return 'The provided key {0} was no{1}'.format(self.key, ', '.join(self.keys))
+
+
 class ConfigDict(dict):
 
     def __init__(self, filename):
         self._filename = filename
         while True:
             try:
-                with open(self._filename) as fh:
-                    for line in fh:
-                        line = line.rstrip()
-                        key, value = line.split('=', 1)
-                        dict.__setitem__(self, key, value)
-                    break;
+                open(self._filename, 'r').close()
+                break;
             except IOError:
                 sys.stderr.write('Provided path does not exist\n')
                 self._filename = input('Please enter a new file or path: ')
+        with open(self._filename) as fh:
+            for line in fh:
+                line = line.rstrip()
+                key, value = line.split('=', 1)
+                dict.__setitem__(self, key, value)
+
+
 
     def __setitem__(self, key, value):
         dict.__setitem__(self, key, value)
@@ -24,19 +37,9 @@ class ConfigDict(dict):
                 fh.write('{0}={1}\n'.format(key, val))
 
     def __getitem__(self, key):
-        if not key in self:
-            raise(ConfigKeyError(self, key))
-        return dict.__getitem__(self, key)
 
-class ConfigKeyError(Exception):
-    def __init__(self, this, key):
-        self.key = key
-        self.keys = this.keys
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            exit('Error the provided key "{0}" is not in the set:\n[ {1} ]'.format(key, ', '.join(self.keys())))
 
-    def __str__(self):
-        return 'The provided key {0} was not found, Here is a list of availble keys:\n \t[{1}]'.format(self.key, ', '.join(self.keys))
-
-
-# cd = ConfigDict('config_file.txt')
-# print('{0}\n'.format(cd['key']))
-# print('{0}\n'.format(cd['not key']))

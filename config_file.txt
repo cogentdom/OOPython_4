@@ -3,4 +3,4 @@ email_to=me@mydomain.com
 num_retries=5
 database=mysql_managed
 key=value
-a_key=this_value
+thiskey=thisvalue
