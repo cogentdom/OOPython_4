@@ -4,7 +4,7 @@
     ./test.py thiskey thisvalue  (sets 'thiskey' and 'thisvalue' in the dict)
 """
 import sys
-from assgn_4 import ConfigDict      # assumes "assignment3.py" holds a
+from assgn_4 import ConfigDict          # assumes "assignment3.py" holds a
                                         # class caleld ConfigDict
 
 cd = ConfigDict('config_file.txt')
